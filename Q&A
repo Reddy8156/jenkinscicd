@@ -1,0 +1,156 @@
+Jenkins Interview Cheat Sheet – Q&A Format
+1. Basics of Jenkins
+Q1: What is Jenkins?
+Jenkins is an open-source automation server for CI/CD; it automates builds, tests, and deployments.
+
+Q2: What is Continuous Integration (CI)?
+Developers frequently merge code; automated builds and tests run on each commit.
+
+Q3: What is Continuous Deployment/Delivery (CD)?
+Delivery: Automated deployment to staging; Deployment: Fully automated to production.
+
+Q4: Features of Jenkins?
+Open-source, cross-platform, plugin-based, distributed builds, pipeline as code, integrations.
+
+Q5: What is a Jenkins job?
+A task/project in Jenkins, e.g., build or deploy an application.
+
+Q6: What are Jenkins plugins?
+Extensions to enhance Jenkins functionality (Git, Slack, Maven, Docker, Kubernetes).
+
+Q7: Explain Jenkins architecture.
+Master schedules builds, monitors nodes; agents execute builds. Master handles UI and orchestration.
+
+Q8: What is a Jenkinsfile?
+Pipeline as code defining stages and steps in Groovy DSL.
+
+Q9: Difference between Freestyle and Pipeline jobs?
+Freestyle: GUI-based, simple, not versioned. Pipeline: Code-based, supports complex pipelines, versioned in SCM.
+
+Q10: Difference between Declarative and Scripted Pipeline
+Declarative: Structured, easier. Scripted: Groovy-based, flexible.
+
+2. Jenkins Pipeline Concepts
+Q11: What is a stage in a pipeline?
+Logical section like Build, Test, Deploy.
+
+Q12: What is a step in a pipeline?
+Individual action inside a stage (e.g., sh, maven, git).
+
+Q13: What are multibranch pipelines?
+Pipelines that automatically create jobs per branch in a repository.
+
+Q14: How do you trigger Jenkins pipelines?
+SCM push, cron schedule, manual, or API call.
+
+Q15: How do you parameterize a Jenkins job?
+Use string, choice, boolean parameters for dynamic input.
+
+Q16: How to pass environment variables in Jenkinsfile?
+environment { ENV = 'dev' }
+
+Q17: How do you integrate Jenkins with Git?
+Install Git plugin, configure repo URL, credentials, and branch to build.
+
+Q18: How do you handle credentials securely?
+Use Jenkins Credentials Manager; never hardcode secrets.
+
+Q19: How do you manage pipeline failures?
+Analyze console logs, rerun failed stages, notify via email/Slack.
+
+Q20: What is a post section in a pipeline?
+Actions after stage execution (always, success, failure).
+
+3. Jenkins Advanced Concepts
+Q21: What is Jenkins Blue Ocean?
+Modern UI for pipeline visualization and editing.
+
+Q22: What is Jenkins distributed build?
+Master schedules, agents execute builds to scale workloads.
+
+Q23: What is a node and executor?
+Node: Machine that runs builds; Executor: Slot on node that runs one build.
+
+Q24: How to integrate Jenkins with Docker?
+Use Docker plugin or Docker agents to build/run images.
+
+Q25: How to scale Jenkins?
+Add multiple agents; use cloud/Kubernetes dynamic agents.
+
+Q26: How to secure Jenkins?
+Authentication, authorization, credentials manager, HTTPS, CSRF protection.
+
+Q27: How do you enforce branch policies in Jenkins?
+Use multibranch pipelines, build triggers, and PR validations.
+
+Q28: How to handle multiple environments in pipelines?
+Use parameters, env variables, separate stages for dev, QA, staging, prod.
+
+Q29: How to integrate Jenkins with Maven?
+Use Maven plugin, define pom.xml, set goals (clean install), use global Maven config.
+
+Q30: How to implement CI/CD using Jenkins?
+Pull code → Build → Test → Generate artifacts → Deploy → Notify.
+
+4. Jenkins Integration & Plugins
+Q31: How to integrate Jenkins with Slack?
+Install Slack plugin, configure workspace, send build notifications.
+
+Q32: How to integrate Jenkins with SonarQube?
+Install plugin, configure server, run sonar-scanner in pipeline.
+
+Q33: How to integrate Jenkins with Kubernetes?
+Use Kubernetes plugin for ephemeral pods/agents.
+
+Q34: How to integrate Jenkins with AWS?
+Use AWS CLI, CodeDeploy plugin, or Terraform scripts.
+
+Q35: How to integrate Jenkins with Azure DevOps?
+Trigger pipelines via REST API or deploy apps using service connections.
+
+Q36: How do you deploy Docker images via Jenkins?
+Build image → Tag → Push registry → Pull in target → Run container.
+
+Q37: How to automate testing in Jenkins?
+Run unit, integration, Selenium tests; publish results with JUnit/TestNG plugin.
+
+Q38: What are Shared Libraries in Jenkins?
+Reusable Groovy scripts for pipelines, stored in SCM.
+
+Q39: How to implement pipeline as code in a team environment?
+Store Jenkinsfile in repo, multibranch pipelines, use PR reviews.
+
+Q40: How to implement rollback in Jenkins deployments?
+Use artifacts/tags from previous build if current deployment fails.
+
+5. Jenkins Scenario-Based Questions
+Q41: Build fails frequently. How to troubleshoot?
+Check logs → Analyze test failures → Reproduce locally → Fix code/pipeline.
+
+Q42: Deploying to multiple environments. How to manage?
+Use separate stages per environment with env variables and approvals.
+
+Q43: CI/CD for multiple microservices. How?
+Multibranch pipelines per repo → Parameterize → Use shared libraries.
+
+Q44: How to reduce build time for large projects?
+Parallel stages, caching dependencies, distributed builds, lightweight agents.
+
+Q45: How to handle secrets in Jenkins pipeline?
+Jenkins Credentials, Vault, Azure Key Vault → Inject as environment variables.
+
+Q46: Jenkins master crashes. How to recover?
+Restore backup → Reconnect agents → Restart builds → Consider HA setup.
+
+Q47: Notify team on build status?
+Slack/email plugin, post section, or webhook notifications.
+
+Q48: Automate database migrations in Jenkins pipeline?
+Use migration tools (Liquibase/Flyway) in a pipeline stage before deployment.
+
+Q49: Enforce code quality?
+Integrate SonarQube → Fail build on low coverage → Publish reports.
+
+Q50: Continuous Testing integration?
+Run unit/API/UI tests in pipeline → Collect results → Fail build if critical tests fail.
+
