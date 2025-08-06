@@ -1,0 +1,71 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE_NAME = "my-go-app"
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
+    ARTIFACTORY_URL = "https://mycompany.jfrog.io/artifactory"
+    ARTIFACTORY_REPO = "docker-local"
+    HELM_RELEASE = "my-go-app"
+    KUBE_NAMESPACE = "default"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'go mod tidy'
+        sh 'go build -o myapp'
+      }
+    }
+
+    stage('Docker Build') {
+      steps {
+        script {
+          sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+        }
+      }
+    }
+
+    stage('Push to JFrog') {
+      steps {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'jfrog-creds', usernameVariable: 'JFROG_USER', passwordVariable: 'JFROG_PASSWORD')]) {
+            sh """
+              docker login ${ARTIFACTORY_URL} -u $JFROG_USER -p $JFROG_PASSWORD
+              docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ARTIFACTORY_URL}/${ARTIFACTORY_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
+              docker push ${ARTIFACTORY_URL}/${ARTIFACTORY_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
+            """
+          }
+        }
+      }
+    }
+
+    stage('Deploy with Helm') {
+      steps {
+        script {
+          sh """
+            helm upgrade --install ${HELM_RELEASE} ./helm/${IMAGE_NAME} \
+              --namespace ${KUBE_NAMESPACE} \
+              --set image.repository=${ARTIFACTORY_URL}/${ARTIFACTORY_REPO}/${IMAGE_NAME} \
+              --set image.tag=${IMAGE_TAG}
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo " Deployment successful!"
+    }
+    failure {
+      echo " Deployment failed."
+    }
+  }
+}
